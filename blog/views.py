@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Post
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from .serializers import PostSerializer
 
 # Create your views here.
 def index (request):
@@ -10,4 +11,5 @@ def index (request):
 @api_view(['GET'])
 def getPosts(request):
   posts = Post.objects.all()
-  return Response({'posts':posts})
+  serializer = PostSerializer(posts,many=True)
+  return Response(serializer.data)
