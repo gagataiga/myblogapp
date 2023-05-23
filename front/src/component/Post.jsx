@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
+import axiosWithCredentials from "axios";
 import "./Post.css"
 
 
@@ -13,10 +14,11 @@ export default function Post() {
   }, []);
   
   const fetchData = async () => { 
+ 
     try {
       const response = await axios.get("/posts/");
       setData(response.data);
-      console.log("dataを取得したよ");
+      console.log("Here we have some data");
     } catch (error) {
       console.error(error);
     }
@@ -30,9 +32,15 @@ export default function Post() {
     setContent(event.target.value);
   }
 
-  const handleSubmit = (event) => { 
-    event.preentDefaul();
-    console.log(event);
+  const handleSubmit = async (event) => { 
+    event.preventDefault();
+
+    try { 
+      const response = await axiosWithCredentials.post("/add/", { title, content });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
   }
   return (
     <>
@@ -41,7 +49,7 @@ export default function Post() {
           <label htmlFor="">Title:
             <input type="text" value={title} onChange={handleTitle}/>
           </label>
-          <label htmlFor="">Title:
+          <label htmlFor="">Content:
             <input type="text" value={content} onChange={handleContent}/>
           </label>
           <button type="submit">Submit</button>
